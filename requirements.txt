@@ -1,0 +1,26 @@
+# assumes python 3.7.4 and wheel
+
+# install gw packages first (will determine latest version compatibility)
+pycbc
+astropy
+ligo-gracedb
+ligo-proxy-utils
+
+# jupyter notebook compatibility
+ipykernel
+# jupyter
+# ipywidgets
+
+# dev packages
+black
+isort
+pytest
+
+redis
+tqdm
+toml
+
+numpy
+scipy
+pandas
+matplotlib
