@@ -6,6 +6,11 @@ astropy
 ligo-gracedb
 ligo-proxy-utils
 
+numpy
+scipy
+pandas
+matplotlib
+
 # jupyter notebook compatibility
 ipykernel
 # jupyter
@@ -14,13 +19,11 @@ ipykernel
 # dev packages
 black
 isort
+mypy
+flake8
 pytest
 
-redis
-tqdm
 toml
-
-numpy
-scipy
-pandas
-matplotlib
+types-toml
+redis
+types-redis

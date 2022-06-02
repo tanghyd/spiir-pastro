@@ -1,20 +1,19 @@
 import json
 import logging
 import time
-import toml
 from pathlib import Path
 from typing import Any, Optional
 
-from ligo.gracedb.rest import GraceDb
+import toml
 from igwn_alert import client
+from ligo.gracedb.rest import GraceDb
 
 from spiir.pastro.mass_contour import MassContourEstimator
 
-# to do: replace with module level logger and handle root log levels in executable
-logger = logging.getLogger("spiir-pastro")
+logger = logging.getLogger(__name__)
 
 
-def run_igwn_alert_listener(
+def run_igwn_alert_consumer(
     server: str = "kafka://kafka.scima.org/",
     group: str = "gracedb-playground",
     topics: list[str] = ["test_spiir"],
@@ -29,7 +28,7 @@ def run_igwn_alert_listener(
     assert Path(auth_fp).is_file(), f"{auth_fp} does not exist"
 
     # prepare igwn alert client
-    client_args = {"server": server, "group": group, 'authfile': str(auth_fp)}
+    client_args = {"server": server, "group": group, "authfile": str(auth_fp)}
 
     if username is not None:
         # load SCIMMA hop auth credentials from auth.toml file
@@ -42,24 +41,21 @@ def run_igwn_alert_listener(
         elif len(auth) == 0:
             raise RuntimeError(f"No credentials found for {username} in {auth_fp}")
         else:
-            auth = auth[0]
-
-        logger.debug(f"Loading {username} credentials from {auth_fp}")
-        client_args["username"] = auth["username"]
-        client_args["password"] = auth["password"]   
+            logger.debug(f"Loading {username} credentials from {auth_fp}")
+            client_args["username"] = auth[0]["username"]
+            client_args["password"] = auth[0]["password"]
     else:
-        logger.debug(f"Loading default credentials from {auth_fp}") 
+        logger.debug(f"Loading default credentials from {auth_fp}")
 
     # Initialize the client sesion
     logger.debug(client_args)
     alert_client = client(**client_args)
 
     service_url = f"https://{group}.ligo.org/api/"
-    listener = IGWNAlertListener(out_dir=outdir, service_url=service_url)
+    listener = IGWNAlertConsumer(out_dir=outdir, service_url=service_url)
 
     try:
         alert_client.listen(listener.process_alert, topics)
-
 
     except (KeyboardInterrupt, SystemExit):
         # Kill the client upon exiting the loop:
@@ -70,7 +66,7 @@ def run_igwn_alert_listener(
             logger.info("Disconnected")
 
 
-class IGWNAlertListener:
+class IGWNAlertConsumer:
     def __init__(
         self,
         id: str = "IGWNAlertListener",
@@ -81,7 +77,7 @@ class IGWNAlertListener:
 
         # gracedb connection
         self.gracedb = None
-        self.service_url = None
+        self.service_url: str | None = None
         if service_url is not None:
             self._setup_client(service_url)
 
@@ -91,7 +87,7 @@ class IGWNAlertListener:
 
         # instantiate pastro model - to do: load from config + save coeffs with preds
         # coefficients = {"m0": 0.01, "a0": 0.75, "b0": -0.322, "b1": -0.516}  # pycbc
-        coefficients = {"m0": 0.01, "a0": 0.76, "b0": -0.685, "b1": 0.467}   # spiir
+        coefficients = {"m0": 0.01, "a0": 0.76, "b0": -0.685, "b1": 0.467}  # spiir
         self.pastro = MassContourEstimator(coefficients)
 
         logger.info(f"Initialized {self.id}.")
@@ -113,7 +109,7 @@ class IGWNAlertListener:
 
     def upload_pastro(self, graceid: str, probs: dict[str, Any]):
         assert self.gracedb is not None
-        for key in ("BNS", "NSBH", "BBH", "MassGap"): # "Terrestrial
+        for key in ("BNS", "NSBH", "BBH", "MassGap"):  # "Terrestrial
             assert key in probs, f"{key} not present in {list(probs.keys())}"
 
         try:
@@ -124,11 +120,11 @@ class IGWNAlertListener:
 
     def process_alert(
         self,
-        topic: Optional[list[str]] = None,
-        payload: Optional[dict[str, Any]] = None,
+        topic: list[str] | None = None,
+        payload: dict[str, Any] | None = None,
     ):
         # to do: check optional input parameters in igwn_alert repo
-        try:
+        if payload is not None:
             logger.info(f"{self.id} recieved an alert from topic {topic}")
 
             # extract relevant alert data from payload
@@ -165,10 +161,8 @@ class IGWNAlertListener:
                 outfile=alert_path / "mass_contour.png",  # save to disk
             )
             logger.debug(f"Saved {str(alert_path / 'mass_contour.png')} to disk")
-
-        except Exception as e:
-            # to do - better exception handling
-            logger.error(e)
+        else:
+            logger.warn(f"Alert received but payload = None; topic = {topic}")
 
     def __exit__(self):
         self.gracedb.close()

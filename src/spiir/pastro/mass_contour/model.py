@@ -4,8 +4,9 @@ from typing import Optional
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
-from .predict import predict_pastro, predict_redshift, calc_probabilities
 from .plot import _draw_mass_contour_axes, _draw_prob_pie_axes
+from .predict import calc_probabilities, predict_pastro, predict_redshift
+
 
 # Class based method for estimation
 class MassContourEstimator:
@@ -118,9 +119,7 @@ class MassContourEstimator:
 
         # predict redshift and mass uncertainties according to model coefficients
         mchirp_std = mchirp * self.coefficients["m0"]
-        z, z_std = predict_redshift(
-            self.coefficients, snr, eff_dist, self._lal_cosmology, truncate_lower_dist
-        )
+        z, z_std = predict_redshift(self.coefficients, snr, eff_dist, self._lal_cosmology, truncate_lower_dist)
 
         # calculate class probabilities given mchirp and redshift uncertainty
         probabilities = calc_probabilities(
@@ -135,9 +134,7 @@ class MassContourEstimator:
 
         # plot paired figure plot
         fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=figsize)
-        _draw_mass_contour_axes(
-            ax1, mchirp, mchirp_std, z, z_std, self._m_bounds, self._mgap_bounds
-        )
+        _draw_mass_contour_axes(ax1, mchirp, mchirp_std, z, z_std, self._m_bounds, self._mgap_bounds)
         _draw_prob_pie_axes(ax2, probabilities)
 
         if suptitle:

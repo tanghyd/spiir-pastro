@@ -4,11 +4,10 @@
 
 from typing import Optional
 
-import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
+import numpy as np
 from matplotlib.axes import Axes
-
+from matplotlib.figure import Figure
 from pycbc.conversions import mass2_from_mchirp_mass1 as mcm1_to_m2
 
 from . import estimate_source_mass
@@ -36,9 +35,10 @@ def plot_mass_contour_figure(
     mass_limits: tuple[float, float],
     mass_bdary: tuple[float, float],
     figsize: tuple[float, float] = (8, 6),
-    xlims: Optional[tuple[float, float]] = None,
-    ylims: Optional[tuple[float, float]] = None,
+    xlims: tuple[float, float] | None = None,
+    ylims: tuple[float, float] | None = None,
 ) -> Figure:
+    """Draws a full matplotlib Figure visualising the probability mass contour plane."""
 
     fig, ax = plt.subplots(figsize=figsize)
     _draw_mass_contour_axes(
@@ -64,17 +64,19 @@ def _draw_mass_contour_axes(
     z_std: float,
     mass_limits: tuple[float, float],
     mass_bdary: tuple[float, float],
-    xlims: Optional[tuple[float, float]] = None,
-    ylims: Optional[tuple[float, float]] = None,
+    xlims: tuple[float, float] | None = None,
+    ylims: tuple[float, float] | None = None,
 ) -> Axes:
+    """Draws one matplotlib.axes.Axes visualising the probability mass contour plane."""
+
     # estimate source frame chirp mass and uncertainty boundary
     mc, mc_std = estimate_source_mass(mchirp, mchirp_std, z, z_std)
     mcb = mc + mc_std
     mcs = mc - mc_std
 
     # determine component masses (when m1 = m2) given chirp mass boundaries
-    mib = (2.0 ** 0.2) * mcb
-    mis = (2.0 ** 0.2) * mcs
+    mib = (2.0**0.2) * mcb
+    mis = (2.0**0.2) * mcs
 
     # get mass boundary limits
     m2_min, m1_max = mass_limits
@@ -93,9 +95,7 @@ def _draw_mass_contour_axes(
         ax.plot((m1_max, m1_max), (mcm1_to_m2(mcs, lim_m1s), m1_max), "b")
     else:
         ax.plot(m1b, m2b, "b")
-        ax.plot(
-            (m1_max, m1_max), (mcm1_to_m2(mcs, lim_m1s), mcm1_to_m2(mcb, lim_m1b)), "b"
-        )
+        ax.plot((m1_max, m1_max), (mcm1_to_m2(mcs, lim_m1s), mcm1_to_m2(mcb, lim_m1b)), "b")
     if mis >= m2_min:
         ax.plot(m1s, m2s, "b")
         ax.plot((lim_m1s, lim_m1b), (m2_min, m2_min), "b")
@@ -117,9 +117,7 @@ def _draw_mass_contour_axes(
         color=get_source_colour("NSBH"),
         alpha=0.5,
     )
-    ax.fill_between(
-        np.arange(gap_max, m1_max, 0.01), 0.0, ns_max, color=get_source_colour("NSBH")
-    )
+    ax.fill_between(np.arange(gap_max, m1_max, 0.01), 0.0, ns_max, color=get_source_colour("NSBH"))
     ax.fill_between(
         np.arange(ns_max, gap_max, 0.01),
         np.arange(ns_max, gap_max, 0.01),

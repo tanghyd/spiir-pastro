@@ -15,21 +15,24 @@ It also includes a function that calculates the source frame mass when given the
 detector frame mass and redshift.
 """
 
-from typing import Optional, Union
-
+import logging
 import math
-import numpy as np
-from scipy.integrate import quad
 
+import numpy as np
 from astropy.cosmology import FlatLambdaCDM
 from pycbc.conversions import mass2_from_mchirp_mass1 as mcm1_to_m2
 from pycbc.cosmology import _redshift
+from scipy.integrate import quad
+
+# from spiir.config.logging import logger
+
+logger = logging.getLogger(__name__)
 
 
 def estimate_redshift_from_distance(
     distance: float,
     distance_std: float,
-    truncate_lower_dist: Optional[float] = None,
+    truncate_lower_dist: float | None = None,
     lal_cosmology: bool = True,
 ) -> tuple[float, float]:
     """
@@ -68,9 +71,7 @@ def estimate_redshift_from_distance(
     return z_estimation, z_std_estimation
 
 
-def estimate_source_mass(
-    mdet: float, mdet_std: float, z: float, z_std: float
-) -> tuple[float, float]:
+def estimate_source_mass(mdet: float, mdet_std: float, z: float, z_std: float) -> tuple[float, float]:
     """
     Takes values of redshift, redshift uncertainty, detector mass and its
     uncertainty and computes the source mass and its uncertainty.
@@ -110,7 +111,7 @@ def integrate_chirp_mass(mchirp: float, m_min: float, m_max: float) -> float:
 def get_area(
     msrc: float,
     msrc_std: float,
-    lim_h1: Union[float, str],  # consider refactor?
+    lim_h1: float | str,  # consider refactor?
     lim_h2: float,
     lim_v1: float,
     lim_v2: float,
@@ -141,8 +142,8 @@ def get_area(
     if lim_h1 == "diagonal":
         # the points where the equal mass line and a chirp mass
         # curve intersect is at m1 = m2 = 2**0.2 * mchirp
-        max_h1 = mchirp_max * (2.0 ** 0.2)
-        min_h1 = mchirp_min * (2.0 ** 0.2)
+        max_h1 = mchirp_max * (2.0**0.2)
+        min_h1 = mchirp_min * (2.0**0.2)
         fun_sup = lambda x: x
     else:
         max_h1 = mcm1_to_m2(mchirp_max, lim_h1)
@@ -222,14 +223,13 @@ def predict_redshift(
     snr: float,
     eff_distance: float,
     lal_cosmology: bool = True,
-    truncate_lower_dist: Optional[float] = None,
+    truncate_lower_dist: float | None = None,
 ) -> tuple[float, float]:
+    logger.debug(f"truncate_lower_dist: {truncate_lower_dist}")
     # compute estimated luminosity distance and redshift and their uncertainties
     dist_est = coefficients["a0"] * eff_distance
     dist_std_est = dist_est * math.exp(coefficients["b0"]) * snr ** coefficients["b1"]
-    z, z_std = estimate_redshift_from_distance(
-        dist_est, dist_std_est, truncate_lower_dist, lal_cosmology
-    )
+    z, z_std = estimate_redshift_from_distance(dist_est, dist_std_est, truncate_lower_dist, lal_cosmology)
 
     return z, z_std
 
@@ -244,7 +244,7 @@ def calc_probabilities(
     group_mgap: bool = True,
 ) -> dict[str, float]:
     # determine chirp mass bounds in detector frame for classification
-    get_redshifted_mchirp = lambda m: (m / (2 ** 0.2)) * (1 + z)  # Mc_det = (1+z)*Mc
+    get_redshifted_mchirp = lambda m: (m / (2**0.2)) * (1 + z)  # Mc_det = (1+z)*Mc
     mchirp_min, mchirp_max = (get_redshifted_mchirp(m) for m in m_bounds)
 
     # determine astrophysical source class probabilities given estimated parameters
@@ -312,13 +312,9 @@ def predict_pastro(
         The astrophysical source probabilities for each class.
     """
     # predict redshift according to model coefficients
-    z, z_std = predict_redshift(
-        coefficients, snr, eff_distance, lal_cosmology, truncate_lower_dist
-    )
+    z, z_std = predict_redshift(coefficients, snr, eff_distance, lal_cosmology, truncate_lower_dist)
 
     # calculate class probabilities given mchirp and redshift uncertainty
-    probabilities = calc_probabilities(
-        coefficients, mchirp, z, z_std, m_bounds, mgap_bounds, group_mgap
-    )
+    probabilities = calc_probabilities(coefficients, mchirp, z, z_std, m_bounds, mgap_bounds, group_mgap)
 
     return probabilities
