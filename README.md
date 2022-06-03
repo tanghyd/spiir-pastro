@@ -29,7 +29,7 @@ If both Python3.10 and virtualenv is already installed on your machine we can bu
     python -m venv venv  # we use python3.10.4
     source venv/bin/activate
     pip install --upgrade pip setuptools wheel
-    pip install -r requirements.txt
+    pip install -r requirements.txt  # add igwn-alert here or call pip install igwn-alert
     pip install -e .  # installs local package
 
 This method was used to install the application virtual environment on OzStar - Python/3.10.4 can be loaded using `module load python/3.10.4`, which comes with swig and m2crypto already compatible with the environment.
@@ -48,7 +48,6 @@ the remote host instance and connecting again. For example the Command Pallete i
 
 Installed jupyter kernels can be viewed by calling `jupyter kernelspec list`.
 
-
 ## Credentials
 
 ### LIGO GraceDb Credentials
@@ -64,6 +63,16 @@ Replace albert.einstein with your LIGO username and type your password at the pr
 ### SCiMMA Authentication
 
 TODO: Add instructions; see: [SCiMMA Auth](https://my.hop.scimma.org/).
+
+## Developer Guide
+
+### Documentation
+
+All documentation written for this package should follow the [NumPy documentation style guide](https://numpy.org/doc/1.21/docs/howto_document.html), which is a derivation of the Google developer documentation style guide.
+
+<!-- ### Formatting
+
+Black with --line-length 120. -->
 
 ## Current Goals
 
@@ -104,6 +113,11 @@ TODO: Add instructions; see: [SCiMMA Auth](https://my.hop.scimma.org/).
   - Improve SPIIR effective distance fit to BAYESTAR luminosity distances.
   - Implement MC-FGMC model. (Optional)
 
+### Development
+  - Add GitLab CI/CD Integration.
+  - Add NumPy style doc-strings to all functions and classes.
+  - Generate documentation with Sphinx.
+
 ### Deployment
 
 #### Phase 1
@@ -111,7 +125,6 @@ TODO: Add instructions; see: [SCiMMA Auth](https://my.hop.scimma.org/).
 
 #### Phase 2
   - Develop internal solution to compute p_astro without IGWN-Alert (i.e. with Redis and node communication).
-  - Add GitLab CI/CD Integration.
   - Implement online monitoring tools.
 
 #### Phase 3
