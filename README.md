@@ -128,7 +128,7 @@ Black with --line-length 120. -->
   - Implement online monitoring tools.
 
 #### Phase 3
-- Integration MLOps tools (e.g. DVC/CML) with GitLab CI/CD.
+- Integrate MLOps tools (e.g. DVC/CML) with GitLab CI/CD. (Optional)
   - Automate data extraction from a remote data repo with DVC.
   - Implement a training test and visualisation for git commits with CML.
 
