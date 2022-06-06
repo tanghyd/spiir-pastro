@@ -29,10 +29,12 @@ If both Python3.10 and virtualenv is already installed on your machine we can bu
     python -m venv venv  # we use python3.10.4
     source venv/bin/activate
     pip install --upgrade pip setuptools wheel
-    pip install -r requirements.txt  # add igwn-alert here or call pip install igwn-alert
+    pip install -r requirements.txt
     pip install -e .  # installs local package
 
 This method was used to install the application virtual environment on OzStar - Python/3.10.4 can be loaded using `module load python/3.10.4`, which comes with swig and m2crypto already compatible with the environment.
+
+Note that it appears that there is no wheel available for confluent_kafka on Python3.10 and so `pip install igwn-alert` will fail on this Kafka dependency. We would recommend downgrading to Python3.9, using Conda, or experiment with installing Kafka manually yourself.
 
 ### Jupyter Kernel
 
