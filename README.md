@@ -18,6 +18,7 @@ Python3.10 installation via conda is straightforward. We can simply install our 
     conda create -n venv -c conda-forge python=3.10.4 pip swig m2crypto igwn-alert -y
     conda activate venv
     pip install -r requirements.txt 
+    pip install ./src/p-astro  # ligo.p_astro
     pip install -e .  # installs local package
 
 This method was used to install the application virtual environment on CIT - swig and m2crypto must be installed together via conda-forge due to path installation problems with pip.
@@ -30,6 +31,7 @@ If both Python3.10 and virtualenv is already installed on your machine we can bu
     source venv/bin/activate
     pip install --upgrade pip setuptools wheel
     pip install -r requirements.txt
+    pip install ./src/p-astro  # ligo.p_astro
     pip install -e .  # installs local package
 
 This method was used to install the application virtual environment on OzStar - Python/3.10.4 can be loaded using `module load python/3.10.4`, which comes with swig and m2crypto already compatible with the environment.
@@ -80,56 +82,41 @@ Black with --line-length 120. -->
 
 ### Data Collection
 
-#### Phase 1
-
-  - Optimise data extraction from zerolags for efficient data processing (e.g. parquet files, faster LIGO-LW read) [COMPLETE]
-  - Gather zerolags from 1 week background runs:
-    - BBH [COMPLETE]
-    - BNS [COMPLETE]
-    - NSBH
-  - Gather zerolags from 1 week non-injection runs:
-    - BBH [IN PROGRESS]
-    - BNS [IN PROGRESS]
-    - NSBH
-  - Gather zerolags from 1 week injection runs:
-    - Generate injection files using lvc_rates_and_pop scripts. [COMPLETE]
-    - BBH [IN PROGRESS]
-    - BNS [IN PROGRESS]
-    - NSBH
-  - Remove contamination of background events from foreground events to obtain zerolag counts for modelling.
-
-#### Phase 2
-  - Repeat the simulation study but using 2 week data instead of 1 week for more accurate background collection.
+- Optimise data extraction from zerolags for efficient data processing (e.g. parquet files, faster LIGO-LW read) [COMPLETE]
+- Gather zerolags from 2 week background runs:
+  - BBH [COMPLETE]
+  - BNS [COMPLETE]
+  - NSBH [COMPLETE]
+- Gather zerolags from 1 week non-injection runs:
+  - BBH [COMPLETE]
+  - BNS [IN PROGRESS]
+  - NSBH [COMPLETE]
+- Gather zerolags from 1 week injection runs:
+  - Generate injection files using lvc_rates_and_pop scripts. [COMPLETE]
+  - BBH [COMPLETE]
+  - BNS [IN PROGRESS]
+  - NSBH [COMPLETE]
+- Extract zerolags and do data pre-processing.
+  - Remove contamination of background events from foreground events to discern signal vs. noise.
 
 ### Modelling
 
-#### Phase 1
-  - Implement PyCBC Live MVP model. [COMPLETE]
-  - Fit SPIIR's effective distance estimates to BAYESTAR luminosity distances. [COMPLETE]
-  - Evaluate model performance on injected simulated events. [COMPLETE]
-  - Evaluate model performance on known merger events (i.e. GWTC). [COMPLETE]
-  - Implement FGMC model. [IN PROGRESS]
-    - Generate initial modelling data from simulation studies, see: [Data Collection](#phase-1). [IN PROGRESS]
-
-#### Phase 2
-  - Improve SPIIR effective distance fit to BAYESTAR luminosity distances.
-  - Implement MC-FGMC model. (Optional)
+- Implement PyCBC Live MVP model. [COMPLETE]
+- Fit SPIIR's effective distance estimates to BAYESTAR luminosity distances. [COMPLETE]
+- Evaluate model performance on injected simulated events. [COMPLETE]
+- Evaluate model performance on known merger events (i.e. GWTC). [COMPLETE]
+- Implement FGMC model from data collected during SPIIR simulation studies. [IN PROGRESS]
+- Improve SPIIR effective distance fit with targeted O3a replay data.
+- Implement MC-FGMC model. (Optional)
 
 ### Development
-  - Add GitLab CI/CD Integration.
-  - Add NumPy style doc-strings to all functions and classes.
-  - Generate documentation with Sphinx.
 
-### Deployment
-
-#### Phase 1
-  - Develop [IGWN-Alert](https://git.ligo.org/lscsoft/igwn-alert/-/blob/main/share/igwn_alert_listener) Consumer on CIT systems for p_astro. [IN PROGRESS] 
-
-#### Phase 2
-  - Develop internal solution to compute p_astro without IGWN-Alert (i.e. with Redis and node communication).
-  - Implement online monitoring tools.
-
-#### Phase 3
+- Add GitLab CI/CD Integration.
+- Add NumPy style doc-strings to all functions and classes.
+- Generate documentation with Sphinx.
+- Develop [IGWN-Alert](https://git.ligo.org/lscsoft/igwn-alert/-/blob/main/share/igwn_alert_listener) Consumer on CIT systems for p_astro. [IN PROGRESS] 
+- Develop internal solution to compute p_astro.json on initial upload without IGWN-Alert.
+- Implement online monitoring tools.
 - Integrate MLOps tools (e.g. DVC/CML) with GitLab CI/CD. (Optional)
   - Automate data extraction from a remote data repo with DVC.
   - Implement a training test and visualisation for git commits with CML.
