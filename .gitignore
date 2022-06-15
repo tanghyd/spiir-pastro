@@ -2,7 +2,6 @@
 tests/
 out/
 scripts/
-venv-py310/
 
 # workspace and data
 notebooks/

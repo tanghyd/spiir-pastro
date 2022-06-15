@@ -22,15 +22,23 @@ class MassContourEstimator:
         Defines class-based Compact Binary Coalescence source classifier based on the
         PyCBC Mass Plane Contour method by Villa-Ortega et. al. (2021).
 
-        Parameters:
-            coefficients: The estimated model coefficients of fitted mass/distance models.
-            m_bounds: The upper and lower bounds for both component masses (m1 >= m2).
-            mgap_bounds: The boundaries that define the mass gap between BH and NS.
-            group_mgap: If True, aggregates Mass Gap from BH+Gap, Gap+NS, and Gap+Gap.
-            lal_cosmology: If True, it uses the Planck15 cosmology model
-                as defined in lalsuite instead of the astropy default.
+        Parameters
+        ----------
+        coefficients: dict[str, float]
+            The estimated model coefficients of fitted mass/distance models.
+        m_bounds: tuple[float, float]
+            The upper and lower bounds for both component masses (m1 >= m2).
+        mgap_bounds: tuple[float, float]
+            The boundaries that define the mass gap between BH and NS.
+        group_mgap: bool
+            If True, aggregates Mass Gap from BH+Gap, Gap+NS, and Gap+Gap.
+        lal_cosmology: bool
+            If True, it uses the Planck15 cosmology model
+            as defined in lalsuite instead of the astropy default.
 
-        Returns:
+        Returns
+        -------
+        dict[str, float]
             A dictionary of probabilities predicted for each CBC source class.
 
         """
@@ -150,19 +158,28 @@ class MassContourEstimator:
         mchirp: float,
         snr: float,
         eff_dist: float,
-        truncate_lower_dist: float = 0.0003,
+        truncate_lower_dist: float | None = 0.0003,
     ) -> dict[str, float]:
         """
         Computes the different probabilities that a candidate event belongs to each
         CBC source class according to search.classify.mchirp_areas.calc_probabilities.
 
         Parameters
-            mchirp: The source frame chirp mass.
-            snr: The coincident signal-to-noise ratio (SNR)
-            eff_distance: The estimated effective distance to the event,
-                usually taken as the minimum across all coincident detectors.
-
-        Returns (Dict[str, float])
+        ----------
+        mchirp: float
+            The source frame chirp mass.
+        snr: float
+            The coincident signal-to-noise ratio (SNR)
+        eff_distance: float
+            The estimated effective distance to the event,
+            usually taken as the minimum across all coincident detectors.
+        truncate_lower_dist: float | None
+            If provided, takes the ceiling of truncate_lower_dist and the estimated lower uncertainty
+            bound for distance to prevent negative or unrealistic distance estimates.
+        
+        Returns
+        -------
+        dict[str, float]
             The astrophysical source probabilities for each class.
         """
 

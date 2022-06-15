@@ -42,13 +42,19 @@ def estimate_redshift_from_distance(
     Constants for lal_cosmology taken from Planck15_lal_cosmology() in
     https://git.ligo.org/lscsoft/pesummary/-/blob/master/pesummary/gw/cosmology.py.
 
-    Parameters:
-        distance: Estimated luminosity distance (D_L).
-        distance_std: Uncertainty (standard deviation) associated with D_L.
-        lal_cosmology: If True, it uses the Planck15 cosmology model
-            as defined in lalsuite instead of the astropy default.
+    Parameters
+    ----------
+    distance: float
+        Estimated luminosity distance (D_L).
+    distance_std: float
+        Uncertainty (standard deviation) associated with D_L.
+    lal_cosmology: bool
+        If True, it uses the Planck15 cosmology model
+        as defined in lalsuite instead of the astropy default.
 
-    Returns: (Tuple[float, float])
+    Returns
+    -------
+    tuple[float, float]
         An estimate of redshift and its corresponding uncertainty.
     """
     # define cosmology parameters
@@ -76,13 +82,20 @@ def estimate_source_mass(mdet: float, mdet_std: float, z: float, z_std: float) -
     Takes values of redshift, redshift uncertainty, detector mass and its
     uncertainty and computes the source mass and its uncertainty.
 
-    Parameters:
-        z: The estimated redshift value
-        z_std: The uncertainty in redshift (standard deviation?)
-        mdet: The mass in the detector frame
-        mdet_std: The uncertainty in detector frame source mass
-
-    Returns: (Tuple[float, float])
+    Parameters
+    ----------
+    mdet: float
+        The mass in the detector frame
+    mdet_std: float
+        The uncertainty in detector frame source mass
+    z: float
+        The estimated redshift value
+    z_std: float
+        The uncertainty in redshift (standard deviation?)
+    
+    Returns
+    -------
+    tuple[float, float]
         The source mass and its uncertainty as a tuple.
 
     """
@@ -96,12 +109,18 @@ def integrate_chirp_mass(mchirp: float, m_min: float, m_max: float) -> float:
     Returns the integral of a component mass as a function of the mass of
     the other component, taking mchirp as an argument.
 
-    Parameters:
-        mchirp: The chirp mass value set as fixed
-        x_min: The minimum m2 value
-        x_max: The maximum m2 value
+    Parameters
+    ----------
+    mchirp: float
+        The chirp mass value set as fixed
+    x_min: float
+        The minimum m2 value
+    x_max: float
+        The maximum m2 value
 
-    Returns: (float)
+    Returns
+    -------
+    float
         The result of the integration of m2 over m1.
 
     """
@@ -120,14 +139,24 @@ def get_area(
     Returns the area of the chirp mass contour in each region of the m1m2 plane
     taking horizontal and vertical limits of the region as arguments. (m1 > m2).
 
-    Parameters:
-        msrc: chirp mass in source frame
-        msrc_std: the uncertainty (standard deviation) of the chirp mass
-        lim_h1: float or "diagonal" - upper horizontal limit (limit on m2)
-        lim_h2: lower horizontal limit of the region (limit on m2)
-        lim_v1, lim_v2: right and left vertical limits of the region (limits on m1)
+    Parameters
+    ----------
+    msrc: float
+        Chirp mass in source frame
+    msrc_std: float
+        The uncertainty (standard deviation) of the chirp mass
+    lim_h1: float | str
+        float or "diagonal" - upper horizontal limit (limit on m2)
+    lim_h2: float
+        lower horizontal limit of the region (limit on m2)
+    lim_v1: float
+        right vertical limits of the region (limits on m1)
+    lim_v2: float
+        left vertical limits of the region (limits on m1)
 
-    Returns: (float)
+    Returns
+    -------
+    float
         The area calculated within provided limits of the mass plane.
     """
     # type check inputs according to implemented logic
@@ -181,16 +210,26 @@ def calc_areas(
     Computes the area inside the lines of the second component mass as a
     function of the first component mass for the two extreme valuesmsrc, msrc_std
 
-    Parameters:
-        mchirp: The detector frame chirp mass.
-        mchirp_std: The uncertainty (standard deviation) in the chirp mass.
-        z: The estimated redshift between detector and source frame of the event.
-        z_std: The uncertainty (standard deviation) in the estimated redshift.
-        m_bounds: The bounds on all possible component masses (let m1 = m2).
-        mgap_bounds: The bounds on the mass gap category (max NS & min BH mass).
-        group_mgap: If True, aggregates Mass Gap from BH+Gap, Gap+NS, and Gap+Gap.
+    Parameters
+    ----------
+    mchirp: float
+        The detector frame chirp mass.
+    mchirp_std: float
+        The uncertainty (standard deviation) in the chirp mass.
+    z: float
+        The estimated redshift between detector and source frame of the event.
+    z_std: float
+        The uncertainty (standard deviation) in the estimated redshift.
+    m_bounds: tuple[float, float]
+        The bounds on all possible component masses (let m1 = m2).
+    mgap_bounds: tuple[float, float]
+        The bounds on the mass gap category (max NS & min BH mass).
+    group_mgap: bool
+        If True, aggregates Mass Gap from BH+Gap, Gap+NS, and Gap+Gap.
 
-    Returns: (Dict[str, float])
+    Returns
+    -------
+    dict[str, float]
         The area covered by each source class within a contour on the mass plane.
     """
     # check valid input arguments for mass bounds [lower, upper]
@@ -283,7 +322,7 @@ def predict_pastro(
     mgap_bounds: tuple[float, float],
     group_mgap: bool = True,
     lal_cosmology: bool = True,
-    truncate_lower_dist: Optional[float] = None,
+    truncate_lower_dist: float | None = None,
 ) -> dict[str, float]:
     """
     Computes the different probabilities that a candidate event belongs to
@@ -297,18 +336,27 @@ def predict_pastro(
     $$ \tilde{\sigma}_{D_L} = e^{b_0} \cdot \tilde{D}_L \cdot\rho_{c}^{b_1} $$
 
     Parameters
-        mchirp: The source frame chirp mass.
-        snr: The coincident signal-to-noise ratio (SNR)
-        eff_distance: The estimated effective distance to the event,
-            usually taken as the minimum across all coincident detectors.
-        coefficients: The estimated model coefficients of fitted mass/distance models.
-        m_bounds: The upper and lower bounds for both component masses (m1 >= m2).
-        mgap_bounds: The boundaries that define the mass gap between BH and NS.
-        group_mgap: If True, aggregates Mass Gap from BH+Gap, Gap+NS, and Gap+Gap.
-        lal_cosmology: If True, it uses the Planck15 cosmology model
-            as defined in lalsuite instead of the astropy default.
+    ----------
+    coefficients: float
+        The estimated model coefficients of fitted mass/distance models.
+    mchirp: float
+        The source frame chirp mass.
+    snr: float
+        The coincident signal-to-noise ratio (SNR)
+    eff_distance: float
+        The estimated effective distance, usually taken as the minimum across all coincident detectors.
+    m_bounds: tuple[float, float]
+        The upper and lower bounds for both component masses (m1 >= m2).
+    mgap_bounds: tuple[float, float]
+        The boundaries that define the mass gap between BH and NS.
+    group_mgap: bool
+        If True, aggregates Mass Gap from BH+Gap, Gap+NS, and Gap+Gap.
+    lal_cosmology: bool
+        If True, it uses the Planck15 cosmology model as defined in lalsuite instead of the astropy default.
 
-    Returns (Dict[str, float])
+    Returns
+    -------
+    dict[str, float]
         The astrophysical source probabilities for each class.
     """
     # predict redshift according to model coefficients

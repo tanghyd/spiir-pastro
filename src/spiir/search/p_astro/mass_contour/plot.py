@@ -10,7 +10,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from pycbc.conversions import mass2_from_mchirp_mass1 as mcm1_to_m2
 
-from . import estimate_source_mass
+from .predict import estimate_source_mass
 
 _source_colour_map = {
     "BNS": "#A2C8F5",  # light blue
@@ -223,7 +223,3 @@ def _draw_prob_pie_axes(ax: Axes, probabilities: dict[str, float]) -> Axes:
     )
     ax.axis("equal")
     return ax
-
-
-# def plot_paired_figure() -> Figure:
-#     pass

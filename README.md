@@ -76,7 +76,7 @@ All documentation written for this package should follow the [NumPy documentatio
 
 <!-- ### Formatting
 
-Black with --line-length 120. -->
+Black with --line-length 100 . -->
 
 ## Current Goals
 
@@ -111,13 +111,16 @@ Black with --line-length 120. -->
 
 ### Development
 
-- Add GitLab CI/CD Integration.
 - Add NumPy style doc-strings to all functions and classes.
-- Generate documentation with Sphinx.
-- Develop [IGWN-Alert](https://git.ligo.org/lscsoft/igwn-alert/-/blob/main/share/igwn_alert_listener) Consumer on CIT systems for p_astro. [IN PROGRESS] 
-- Develop internal solution to compute p_astro.json on initial upload without IGWN-Alert.
-- Implement online monitoring tools.
-- Integrate MLOps tools (e.g. DVC/CML) with GitLab CI/CD. (Optional)
-  - Automate data extraction from a remote data repo with DVC.
-  - Implement a training test and visualisation for git commits with CML.
+  - Generate documentation with Sphinx.
+- Develop [IGWN-Alert](https://git.ligo.org/lscsoft/igwn-alert/-/blob/main/share/igwn_alert_listener) Consumer on CIT systems for p_astro. [COMPLETE]
+  - Test deployment of igwn-alert consumer with HTCondor job submission
+- Develop internal solution to compute p_astro.json on initial upload without IGWN-Alert. [IN PROGRESS]
+- Implement tools to monitor model performance and system state.
+- Add GitLab CI/CD Integration.
+  - Integrate MLOps tools (e.g. DVC/CML) with GitLab CI/CD. (Optional)
+    - Automate data extraction from a remote data repo with DVC.
+    - Implement a training test and visualisation for git commits with CML.
+
+
 
