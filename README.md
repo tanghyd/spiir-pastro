@@ -18,7 +18,6 @@ Python3.10 installation via conda is straightforward. We can simply install our 
     conda create -n venv -c conda-forge python=3.10.4 pip swig m2crypto igwn-alert -y
     conda activate venv
     pip install -r requirements.txt 
-    pip install ./src/p-astro  # ligo.p_astro
     pip install -e .  # installs local package
 
 This method was used to install the application virtual environment on CIT - swig and m2crypto must be installed together via conda-forge due to path installation problems with pip.
@@ -31,7 +30,6 @@ If both Python3.10 and virtualenv is already installed on your machine we can bu
     source venv/bin/activate
     pip install --upgrade pip setuptools wheel
     pip install -r requirements.txt
-    pip install ./src/p-astro  # ligo.p_astro
     pip install -e .  # installs local package
 
 This method was used to install the application virtual environment on OzStar - Python/3.10.4 can be loaded using `module load python/3.10.4`, which comes with swig and m2crypto already compatible with the environment.
