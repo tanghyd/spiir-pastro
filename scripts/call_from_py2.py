@@ -14,10 +14,8 @@ if __name__ == "__main__":
     print("hello py2")
 
 
-    # print "Running pdftotext..."
-    # subprocess.Popen()
-
-    cmd = ["./venv/bin/python", "scripts/p_astro.py"]
+    # cmd = ["../spiir-pastro/venv/bin/python", "../spiir-pastro/scripts/p_astro.py"]
+    cmd = ["bash", "../spiir-pastro/scripts/run_p_astro_subprocess.sh"]
 
     proc = subprocess.Popen(
         cmd,
@@ -26,17 +24,20 @@ if __name__ == "__main__":
     )
     [out, err] = proc.communicate()
 
-    print("out: %s" % out)
+    if out:
+        print("out: %s" % out)
+        p_astro = ast.literal_eval(out)
+            
+        for key in p_astro:
+            print(key, p_astro[key])
+
+        total = sum(float(p_astro[key]) for key in p_astro)
+        print(total)
+        
     if err:
         print("err: %s" % err)
 
-    p_astro = ast.literal_eval(out)
 
-    for key in p_astro:
-        print(key, p_astro[key])
-
-    total = sum(float(p_astro[key]) for key in p_astro)
-    print(total)
 
     end = time.clock()
     duration = round(end - start, 6)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""""An application to upload p_astro.json to GraceDB."""
+""""A script to compute SPIIR's internal p_astro in Python3.10."""
 
 import argparse
 import json
@@ -9,9 +9,9 @@ import time
 from pathlib import Path
 
 import numpy as np
-from ligo.gracedb.rest import GraceDb
+
 # from spiir.config.logs import logger
-from spiir.search.p_astro import compute_pastro
+from spiir.p_astro import compute_pastro
 
 logger = logging.getLogger()
 
@@ -22,35 +22,22 @@ logger = logging.getLogger()
 #         logger.debug(f"Saved {str(file_path)} to disk")
 
 
-def upload_pastro(gracedb: GraceDb, graceid: str, probs: dict[str, float]):
-    assert gracedb is not None
-    for key in ("BNS", "NSBH", "BBH", "Terrestrial"):
-        assert key in probs, f"{key} not present in {list(probs.keys())}"
+# def upload_pastro(gracedb: GraceDb, graceid: str, probs: dict[str, float]):
+#     assert gracedb is not None
+#     for key in ("BNS", "NSBH", "BBH", "Terrestrial"):
+#         assert key in probs, f"{key} not present in {list(probs.keys())}"
 
-    try:
-        gracedb.createVOEvent(graceid, voevent_type="preliminary", **probs)
-        logger.debug(f"{graceid} p_astro.json uploaded to GraceDB")
-    except Exception as e:
-        logger.warning(e)
+#     try:
+#         gracedb.createVOEvent(graceid, voevent_type="preliminary", **probs)
+#         logger.debug(f"{graceid} p_astro.json uploaded to GraceDB")
+#     except Exception as e:
+#         logger.warning(e)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Run the SPIIR p(astro) computation."
     )
-    parser.add_argument(
-        "-g",
-        "--group",
-        type=str,
-        default="gracedb-playground",
-        help="Name of GraceDB group",
-    )
-    # parser.add_argument(
-    #     "--service-url",
-    #     type=str,
-    #     default="https://gracedb-playground.ligo.org/api/",
-    #     help="GraceDB upload API URL."
-    # )
     parser.add_argument(
         "--outdir",
         type=str,
@@ -75,21 +62,6 @@ if __name__ == "__main__":
     #     help="Set logging level to INFO and display progress and information",
     # )
     args = parser.parse_args()
-
-    # verbose = True if args.loglevel <= logging.INFO else False
-
-    # instantiate GraceDb client
-    gracedb_groups = {"gracedb", "gracedb-test", "gracedb-playground"}
-    if args.group not in gracedb_groups:
-        raise KeyError(f"Provided {args.group} not one of {gracedb_groups}.")
-    service_url = f"https://{args.group}.ligo.org/api/"
-    logger.info(f"service_url: {service_url}")
-    
-    try:
-        gracedb = GraceDb(service_url=service_url, reload_certificate=True)
-        logger.info(f"Initialised GraceDB connection at {service_url}")
-    except Exception as e:
-        logger.warning(e)
 
     # compute p_astro
     start = time.perf_counter()
