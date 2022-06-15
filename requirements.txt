@@ -1,7 +1,7 @@
 # assumes python 3.7.4 and wheel
 
 # install gw packages first (will determine latest version compatibility)
-pycbc
+pycbc  # TODO: remove pycbc dependency
 astropy
 ligo-gracedb
 ligo-proxy-utils
@@ -12,18 +12,14 @@ pandas
 matplotlib
 
 # jupyter notebook compatibility
-ipykernel
+# ipykernel
 # jupyter
 # ipywidgets
 
 # dev packages
-black
-isort
-mypy
-flake8
-pytest
+# black
+# isort
+# mypy
+# flake8
+# pytest
 
-toml
-types-toml
-redis
-types-redis
