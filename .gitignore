@@ -1,7 +1,6 @@
 # temp ignore
 tests/
 out/
-scripts/
 
 # workspace and data
 notebooks/
