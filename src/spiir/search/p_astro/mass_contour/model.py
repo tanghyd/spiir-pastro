@@ -1,5 +1,4 @@
 import json
-from typing import Optional
 
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
@@ -119,9 +118,9 @@ class MassContourEstimator:
         snr: float,
         eff_dist: float,
         truncate_lower_dist: float = 0.0003,
-        suptitle: Optional[str] = None,
+        suptitle: str | None = None,
         figsize: tuple[float, float] = (16, 6),
-        outfile: Optional[str] = None,
+        outfile: str | None = None,
     ) -> Figure:
         # closest black hole is 1000LYrs / 0.0003Mpc [https://doi.org/10.1051/0004-6361/202038020]
 
