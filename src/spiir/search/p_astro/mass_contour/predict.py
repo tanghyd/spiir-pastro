@@ -20,11 +20,12 @@ import math
 
 import numpy as np
 from astropy.cosmology import FlatLambdaCDM
-from pycbc.conversions import mass2_from_mchirp_mass1 as mcm1_to_m2
+# from pycbc.conversions import mass2_from_mchirp_mass1 as mcm1_to_m2
 from pycbc.cosmology import _redshift
 from scipy.integrate import quad
 
 # from spiir.config.logging import logger
+from spiir.search.p_astro.utils import mass2_from_mchirp_mass1 as mcm1_to_m2
 
 logger = logging.getLogger(__name__)
 

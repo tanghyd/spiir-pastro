@@ -2,15 +2,13 @@
 # By V. Villa-Ortega, March 2021
 # Minor modifications for SPIIR By Daniel Tang, March 2022
 
-from typing import Optional
-
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
-from pycbc.conversions import mass2_from_mchirp_mass1 as mcm1_to_m2
 
-from .predict import estimate_source_mass
+from spiir.search.p_astro.predict import estimate_source_mass
+from spiir.search.p_astro.utils import mass2_from_mchirp_mass1 as mcm1_to_m2
 
 _source_colour_map = {
     "BNS": "#A2C8F5",  # light blue
