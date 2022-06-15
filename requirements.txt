@@ -17,6 +17,7 @@ matplotlib
 # ipywidgets
 
 # dev packages
+yapf
 # black
 # isort
 # mypy
