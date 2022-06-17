@@ -8,7 +8,7 @@ check pep8 standards:
   script:
     - linter_errors=$(yapf --diff --recursive src/spiir | wc -l | xargs test 0 -eq)
     - echo "$linter_errors"
-    - if [ ! -z "$linter_errors" ]; then \
-        echo "Detected yapf formatting issues; please fix"; \
-        exit 1; else echo "Yapf formatting is correct"; \
-        exit 0; fi
+    - if [ ! -z "$linter_errors" ]; then
+      echo "Detected yapf formatting issues; please fix";
+      exit 1; else echo "Yapf formatting is correct";
+      exit 0; fi
