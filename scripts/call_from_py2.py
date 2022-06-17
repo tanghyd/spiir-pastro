@@ -26,7 +26,7 @@ if __name__ == "__main__":
         description="Run the SPIIR p(astro) computation via subprocess pipe."
     )
     parser.add_argument(
-        "-e", "--entry",
+        "-e", "--entry-point",
         type=str,
         default="scripts/local_entrypoint.sh",
         help="Entrypoint bash script for subprocess.",
@@ -52,10 +52,10 @@ if __name__ == "__main__":
     start = time.clock()
     print("py2: hello world!\n")
 
-    if not os.path.isfile(args.entry):
-        raise RuntimeError("File '%s' does not exist." % args.entry)
+    if not os.path.isfile(args.entry_point):
+        raise RuntimeError("Entry point script '%s' does not exist." % args.entry_point)
 
-    cmd = ["bash", args.entry]
+    cmd = ["bash", args.entry_point]
 
     proc = subprocess.Popen(
         cmd,
