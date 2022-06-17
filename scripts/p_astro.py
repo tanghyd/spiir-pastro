@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-""""A script to compute SPIIR's internal p_astro in Python3.10."""
+""""A script to compute SPIIR's internal p_astro in Python3.10 ."""
 
 import argparse
 import json
@@ -20,12 +18,6 @@ logger = logging.getLogger()
 #     with Path(file_path).open(mode="w") as f:
 #         f.write(json.dumps(data, indent=4))
 #         logger.debug(f"Saved {str(file_path)} to disk")
-
-
-# def upload_pastro(gracedb: GraceDb, graceid: str, probs: dict[str, float]):
-#     assert gracedb is not None
-#     for key in ("BNS", "NSBH", "BBH", "Terrestrial"):
-#         assert key in probs, f"{key} not present in {list(probs.keys())}"
 
 #     try:
 #         gracedb.createVOEvent(graceid, voevent_type="preliminary", **probs)
@@ -62,14 +54,12 @@ if __name__ == "__main__":
     #     help="Set logging level to INFO and display progress and information",
     # )
     args = parser.parse_args()
+    while True:
+        msg = input()
 
-    # compute p_astro
-    start = time.perf_counter()
-    p_astro = compute_pastro()
-    end = time.perf_counter()
-
-    duration = round(end - start, 4)
-    logger.info(f"py3 duration: {duration}")
-
-    # communicate back to py2 via std.out
-    print(p_astro)
+        # communicate back to py2 via std.out
+        time.sleep(0.5)
+        
+        p_astro = compute_pastro()
+        probs = json.dumps(p_astro)
+        print(probs)

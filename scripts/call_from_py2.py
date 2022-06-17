@@ -1,43 +1,98 @@
 #!/usr/bin/env python
 
+import argparse
 import ast
+import json
 import os
 import subprocess
 import sys
 import time
+from contextlib import contextmanager
 
 # from spiir.config.logs import logger
 
+@contextmanager
+def run_and_terminate_process(*args, **kwargs):
+    try:
+        p = subprocess.Popen(*args, **kwargs)
+        yield p        
+    finally:
+        p.terminate() # send sigterm, or ...
+        p.kill()      # send sigkill
+
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Run the SPIIR p(astro) computation via subprocess pipe."
+    )
+    parser.add_argument(
+        "-e", "--entry",
+        type=str,
+        default="scripts/local_entrypoint.sh",
+        help="Entrypoint bash script for subprocess.",
+    )
+    # parser.add_argument(
+    #     "-d",
+    #     "--debug",
+    #     action="store_const",
+    #     dest="logLevel",
+    #     const=logging.DEBUG,
+    #     default=logging.WARNING,
+    #     help="Display all developer debug logging statements",
+    # )
+    # parser.add_argument(
+    #     "-v",
+    #     "--verbose",
+    #     action="store_const",
+    #     dest="logLevel",
+    #     const=logging.INFO,
+    #     help="Set logging level to INFO and display progress and information",
+    # )
+    args = parser.parse_args()
     start = time.clock()
-    print("hello py2")
+    print("py2: hello world!\n")
 
+    if not os.path.isfile(args.entry):
+        raise RuntimeError("File '%s' does not exist." % args.entry)
 
-    # cmd = ["../spiir-pastro/venv/bin/python", "../spiir-pastro/scripts/p_astro.py"]
-    cmd = ["bash", "../spiir-pastro/scripts/run_p_astro_subprocess.sh"]
+    cmd = ["bash", args.entry]
 
     proc = subprocess.Popen(
         cmd,
+        stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
-    [out, err] = proc.communicate()
 
-    if out:
-        print("out: %s" % out)
-        p_astro = ast.literal_eval(out)
-            
-        for key in p_astro:
-            print(key, p_astro[key])
+    for i in range(3):
+        time.sleep(i*0.2)
 
-        total = sum(float(p_astro[key]) for key in p_astro)
-        print(total)
-        
-    if err:
-        print("err: %s" % err)
+        msg = "py2: hello #%d" % i
+        print(msg)       
+        try:
+            proc.stdin.write(msg + "\n")
+        except IOError as e:
+            if e.errno == errno.EPIPE or e.errno == errno.EINVAL:
+                # Stop loop on "Invalid pipe" or "Invalid argument".
+                # No sense in continuing with broken pipe.
+                break
+            else:
+                raise
 
+        out = proc.stdout.readline()
+        print("py2: message from py3!")
 
+        print(out)
+        p_astro = json.loads(out)
+
+        print(p_astro)
+
+        # [out, err] = proc.communicate(msg)
+        # proc.wait()
+
+    # proc.stdin.write("TERMINATE")
+    proc.terminate()
+    # proc.wait()
 
     end = time.clock()
     duration = round(end - start, 6)
