@@ -9,6 +9,7 @@ from .predict import calc_probabilities, predict_pastro, predict_redshift
 
 # Class based method for estimation
 class MassContourEstimator:
+
     def __init__(
         self,
         coefficients: dict[str, float],
@@ -106,9 +107,11 @@ class MassContourEstimator:
             if key not in valid_coeffs:
                 raise KeyError(f"{key} not in valid coeffs {valid_coeffs}")
             if not isinstance(coeffs[key], float):
-                raise TypeError(f"{key} type must be float, not {type(coeffs[key])}")
+                raise TypeError(
+                    f"{key} type must be float, not {type(coeffs[key])}")
         if not (0 < coeffs["m0"] < 1):
-            raise ValueError(f"m0 coeff should be within 0 and 1; m0 = {coeffs['m0']}")
+            raise ValueError(
+                f"m0 coeff should be within 0 and 1; m0 = {coeffs['m0']}")
 
         self._coefficients = coeffs
 
@@ -126,7 +129,8 @@ class MassContourEstimator:
 
         # predict redshift and mass uncertainties according to model coefficients
         mchirp_std = mchirp * self.coefficients["m0"]
-        z, z_std = predict_redshift(self.coefficients, snr, eff_dist, self._lal_cosmology, truncate_lower_dist)
+        z, z_std = predict_redshift(self.coefficients, snr, eff_dist,
+                                    self._lal_cosmology, truncate_lower_dist)
 
         # calculate class probabilities given mchirp and redshift uncertainty
         probabilities = calc_probabilities(
@@ -141,7 +145,8 @@ class MassContourEstimator:
 
         # plot paired figure plot
         fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=figsize)
-        _draw_mass_contour_axes(ax1, mchirp, mchirp_std, z, z_std, self._m_bounds, self._mgap_bounds)
+        _draw_mass_contour_axes(ax1, mchirp, mchirp_std, z, z_std,
+                                self._m_bounds, self._mgap_bounds)
         _draw_prob_pie_axes(ax2, probabilities)
 
         if suptitle:
@@ -195,5 +200,6 @@ class MassContourEstimator:
             truncate_lower_dist,
         )
 
-    def __call__(self, mchirp: float, snr: float, eff_dist: float) -> dict[str, float]:
+    def __call__(self, mchirp: float, snr: float,
+                 eff_dist: float) -> dict[str, float]:
         return self.predict(mchirp, snr, eff_dist)
