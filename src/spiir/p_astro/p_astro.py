@@ -15,6 +15,7 @@ def compute_pastro(
         p_astro[label] = value
     return p_astro
 
+
 def update_posteriors():
     pass
 
@@ -61,7 +62,6 @@ def update_posteriors():
 #     lal_cosmology: bool
 #         If True, it uses the Planck15 cosmology model as defined in lalsuite instead of the astropy default.
 
-
 #     Returns
 #     -------
 #     p_astro : dictionary
@@ -79,11 +79,10 @@ def update_posteriors():
 #         lal_cosmology,
 #         truncate_lower_dist=0.003,
 #     )
-    
+
 #     a_hat_bns = probs["BNS"]
 #     a_hat_bbh = probs["BBH"]
 #     a_hat_nsbh = probs["NSBH"]
-
 
 #     # Compute category-wise Bayes factors
 #     # from astrophysical Bayes factor
