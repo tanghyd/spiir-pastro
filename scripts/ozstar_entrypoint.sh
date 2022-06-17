@@ -3,6 +3,9 @@
 # default spiir python path
 # echo "SPIIR PYTHONPATH: ${PYTHONPATH}"
 
+# BASE_DIR=./
+BASE_DIR=../spiir-pastro/
+
 # entirely wipe PYTHONPATH because some spiir python dependencies cause issues
 export PYTHONPATH=""
 # echo "EMPTY PYTHONPATH: ${PYTHONPATH}"
@@ -16,4 +19,4 @@ module load git/2.18.0
 module load python/3.10.4
 # echo "P-ASTRO PYTHONPATH: ${PYTHONPATH}"
 
-bash scripts/run_p_astro_subprocess.sh
+bash ${BASE_DIR}scripts/run_p_astro_subprocess.sh
