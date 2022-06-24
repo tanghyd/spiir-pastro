@@ -1,6 +1,6 @@
 # SPIIR Astrophysical Source Classification (p_astro)
 
-Author: Daniel Tang [Last Updated: 02/06/22]
+Author: Daniel Tang [Last Updated: 24/06/22]
 
 We use the PyCBC Mass Contour method for relative astrophysical source classification and a FGMC model (GstLAL) for
 a signal vs. noise model.
@@ -87,12 +87,12 @@ Black with --line-length 100 . -->
   - NSBH [COMPLETE]
 - Gather zerolags from 1 week non-injection runs:
   - BBH [COMPLETE]
-  - BNS [IN PROGRESS]
+  - BNS [COMPLETE]
   - NSBH [COMPLETE]
 - Gather zerolags from 1 week injection runs:
   - Generate injection files using lvc_rates_and_pop scripts. [COMPLETE]
   - BBH [COMPLETE]
-  - BNS [IN PROGRESS]
+  - BNS [COMPLETE]
   - NSBH [COMPLETE]
 - Extract zerolags and do data pre-processing.
   - Remove contamination of background events from foreground events to discern signal vs. noise.
