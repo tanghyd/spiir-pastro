@@ -103,9 +103,12 @@ See: [SCiMMA Auth](https://my.hop.scimma.org/).
 ## Commit Hooks
 
 We use [pre-commit](https://pre-commit.com/) to automatically format our code-base
-before any git commits are made client-side. This has the benefit of ensuring that all
-code complies with shared standards across the repository, minimising excessive commit
-history focused specifically on auto-formatting, and can catch developer errors.
+before any git commits are made client-side, i.e. on the developer's working
+environment and not on the remote Git repository (such as GitLab or GitHub). This has
+the benefit of  quickly catching developer errors, ensuring that all code complies with
+shared standards across the repository, and minimising excessive commit history focused
+specifically on auto-formatting (server-side hooks are possible but may introduce
+an additional commit as the developer would have to first commit before pushing).
 
 To do the initial setup, activate your installed Python virtual environment and run the
 following commands:
@@ -113,6 +116,13 @@ following commands:
     # pip install pre-commit  # this is already in requirements.txt, and so not required
     pre-commit install
     pre-commit run --all-files  # by default pre-commit only runs on git staged files
+
+When a `git commit` command is called after staging files, `pre-commit` will be run
+before the commit is finalised. If any changes ARE made to your files according to the
+rules configured in `.pre-commit-config.yaml`, files will need to be re-staged as they
+would have been modified since the initial file staging procedure (`git add`).
+
+See the documentation at [pre-commit](https://pre-commit.com/) for more information.
 
 ## Developer Guide
 
