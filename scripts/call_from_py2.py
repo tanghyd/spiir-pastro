@@ -15,7 +15,7 @@ from contextlib import contextmanager
 def run_and_terminate_process(*args, **kwargs):
     try:
         p = subprocess.Popen(*args, **kwargs)
-        yield p        
+        yield p
     finally:
         p.terminate() # send sigterm, or ...
         p.kill()      # send sigkill
@@ -68,7 +68,7 @@ if __name__ == "__main__":
         time.sleep(i*0.2)
 
         msg = "py2: hello #%d" % i
-        print(msg)       
+        print(msg)
         try:
             proc.stdin.write(msg + "\n")
         except IOError as e:

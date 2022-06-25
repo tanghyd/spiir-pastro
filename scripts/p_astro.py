@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
         # communicate back to py2 via std.out
         time.sleep(0.5)
-        
+
         p_astro = compute_pastro()
         probs = json.dumps(p_astro)
         print(probs)

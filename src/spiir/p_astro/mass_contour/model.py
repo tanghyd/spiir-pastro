@@ -180,7 +180,7 @@ class MassContourEstimator:
         truncate_lower_dist: float | None
             If provided, takes the ceiling of truncate_lower_dist and the estimated lower uncertainty
             bound for distance to prevent negative or unrealistic distance estimates.
-        
+
         Returns
         -------
         dict[str, float]

@@ -12,10 +12,10 @@ matplotlib
 # jupyter
 # ipywidgets
 
+# dev packages
+pre-commit
+black
+isort
+mypy
+flake8
 yapf
-# black
-# isort
-# mypy
-# flake8
-# pytest
-

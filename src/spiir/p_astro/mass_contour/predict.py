@@ -92,7 +92,7 @@ def estimate_source_mass(mdet: float, mdet_std: float, z: float,
         The estimated redshift value
     z_std: float
         The uncertainty in redshift (standard deviation?)
-    
+
     Returns
     -------
     tuple[float, float]

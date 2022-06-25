@@ -17,7 +17,7 @@ Python3.10 installation via conda is straightforward. We can simply install our 
 
     conda create -n venv -c conda-forge python=3.10.4 pip swig m2crypto igwn-alert -y
     conda activate venv
-    pip install -r requirements.txt 
+    pip install -r requirements.txt
     pip install -e .  # installs local package
 
 This method was used to install the application virtual environment on CIT - swig and m2crypto must be installed together via conda-forge due to path installation problems with pip.
@@ -119,6 +119,3 @@ Black with --line-length 100 . -->
   - Integrate MLOps tools (e.g. DVC/CML) with GitLab CI/CD. (Optional)
     - Automate data extraction from a remote data repo with DVC.
     - Implement a training test and visualisation for git commits with CML.
-
-
-
