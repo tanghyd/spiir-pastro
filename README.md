@@ -123,7 +123,9 @@ aborted. Additionally, if any changes ARE made to your files according to the ru
 configured in `.pre-commit-config.yaml`, files will need to be re-staged as they
 would have been modified since the initial file staging procedure (`git add`).
 
-See the documentation at [pre-commit](https://pre-commit.com/) for more information.
+See the documentation at [pre-commit](https://pre-commit.com/) for more information,
+and [this page](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) describing
+client-side and server-side git hooks more generally.
 
 ## Developer Guide
 
