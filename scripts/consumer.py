@@ -15,7 +15,7 @@ logger = logging.getLogger("spiir-pastro")
 logger.setLevel(logging.DEBUG)
 
 # create file handler that logs debug and higher level messages
-fh = logging.FileHandler('out/logs/spiir-pastro.log')  # up one level from bin
+fh = logging.FileHandler("out/logs/spiir-pastro.log")  # up one level from bin
 fh.setLevel(logging.DEBUG)
 
 # create console handler with a higher log level
@@ -23,7 +23,7 @@ ch = logging.StreamHandler()
 ch.setLevel(logging.ERROR)
 
 # create formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 ch.setFormatter(formatter)
 fh.setFormatter(formatter)
 
@@ -60,7 +60,7 @@ parser.add_argument(
     "--outdir",
     type=str,
     default="../out/results",  # up one level from bin
-    help="Output directory to store results."
+    help="Output directory to store results.",
 )
 parser.add_argument(
     "-d",

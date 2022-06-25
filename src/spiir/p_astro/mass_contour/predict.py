@@ -76,8 +76,9 @@ def estimate_redshift_from_distance(
     return z_estimation, z_std_estimation
 
 
-def estimate_source_mass(mdet: float, mdet_std: float, z: float,
-                         z_std: float) -> tuple[float, float]:
+def estimate_source_mass(
+    mdet: float, mdet_std: float, z: float, z_std: float
+) -> tuple[float, float]:
     """
     Takes values of redshift, redshift uncertainty, detector mass and its
     uncertainty and computes the source mass and its uncertainty.
@@ -100,7 +101,7 @@ def estimate_source_mass(mdet: float, mdet_std: float, z: float,
 
     """
     msrc = mdet / (1.0 + z)  # source frame mass
-    msrc_std = msrc * ((mdet_std / mdet)**2.0 + (z_std / (1.0 + z))**2.0)**0.5
+    msrc_std = msrc * ((mdet_std / mdet) ** 2.0 + (z_std / (1.0 + z)) ** 2.0) ** 0.5
     return msrc, msrc_std
 
 
@@ -124,10 +125,7 @@ def integrate_chirp_mass(mchirp: float, m_min: float, m_max: float) -> float:
         The result of the integration of m2 over m1.
 
     """
-    return quad(lambda m, mchirp: mcm1_to_m2(mchirp, m),
-                m_min,
-                m_max,
-                args=mchirp)[0]
+    return quad(lambda m, mchirp: mcm1_to_m2(mchirp, m), m_min, m_max, args=mchirp)[0]
 
 
 def get_area(
@@ -165,8 +163,7 @@ def get_area(
     # type check inputs according to implemented logic
     if isinstance(lim_h1, str):
         assert lim_h1 == "diagonal", "if lim_h1 is a str it must be 'diagonal'."
-    assert isinstance(lim_h2,
-                      float), "get_area not compatible with lim_h2 as str."
+    assert isinstance(lim_h2, float), "get_area not compatible with lim_h2 as str."
 
     # get bounds of chirp mass contour given uncertainty
     mchirp_max = msrc + msrc_std
@@ -239,8 +236,7 @@ def calc_areas(
     # check valid input arguments for mass bounds [lower, upper]
     m_min, m_max = m_bounds
     mgap_min, mgap_max = mgap_bounds
-    assert (0 < m_min <= m_max) and (0 < mgap_min <= mgap_max
-                                     )  # <1 not astrophysical
+    assert (0 < m_min <= m_max) and (0 < mgap_min <= mgap_max)  # <1 not astrophysical
 
     # compute source frame chirp mass given detector frame mass and redshift
     mc_src, mc_src_std = estimate_source_mass(mchirp, mchirp_std, z, z_std)
@@ -249,8 +245,7 @@ def calc_areas(
     abbh = get_area(mc_src, mc_src_std, "diagonal", mgap_max, mgap_max, m_max)
     abhg = get_area(mc_src, mc_src_std, mgap_max, mgap_min, mgap_max, m_max)
     ansbh = get_area(mc_src, mc_src_std, mgap_min, m_min, mgap_max, m_max)
-    agg = get_area(mc_src, mc_src_std, "diagonal", mgap_min, mgap_min,
-                   mgap_max)
+    agg = get_area(mc_src, mc_src_std, "diagonal", mgap_min, mgap_min, mgap_max)
     agns = get_area(mc_src, mc_src_std, mgap_min, m_min, mgap_min, mgap_max)
     abns = get_area(mc_src, mc_src_std, "diagonal", m_min, m_min, mgap_min)
 
@@ -273,11 +268,10 @@ def predict_redshift(
     logger.debug(f"truncate_lower_dist: {truncate_lower_dist}")
     # compute estimated luminosity distance and redshift and their uncertainties
     dist_est = coefficients["a0"] * eff_distance
-    dist_std_est = dist_est * math.exp(
-        coefficients["b0"]) * snr**coefficients["b1"]
-    z, z_std = estimate_redshift_from_distance(dist_est, dist_std_est,
-                                               truncate_lower_dist,
-                                               lal_cosmology)
+    dist_std_est = dist_est * math.exp(coefficients["b0"]) * snr ** coefficients["b1"]
+    z, z_std = estimate_redshift_from_distance(
+        dist_est, dist_std_est, truncate_lower_dist, lal_cosmology
+    )
 
     return z, z_std
 
@@ -292,8 +286,7 @@ def calc_probabilities(
     group_mgap: bool = True,
 ) -> dict[str, float]:
     # determine chirp mass bounds in detector frame for classification
-    get_redshifted_mchirp = lambda m: (m /
-                                       (2**0.2)) * (1 + z)  # Mc_det = (1+z)*Mc
+    get_redshifted_mchirp = lambda m: (m / (2**0.2)) * (1 + z)  # Mc_det = (1+z)*Mc
     mchirp_min, mchirp_max = (get_redshifted_mchirp(m) for m in m_bounds)
 
     # determine astrophysical source class probabilities given estimated parameters
@@ -315,10 +308,8 @@ def calc_probabilities(
 
     else:
         # compute probabilities according to proportional areas in mass contour
-        mc_std = mchirp * coefficients[
-            "m0"]  # inherent uncertainty in chirp mass
-        areas = calc_areas(mchirp, mc_std, z, z_std, m_bounds, mgap_bounds,
-                           group_mgap)
+        mc_std = mchirp * coefficients["m0"]  # inherent uncertainty in chirp mass
+        areas = calc_areas(mchirp, mc_std, z, z_std, m_bounds, mgap_bounds, group_mgap)
         total_area = sum(areas.values())
         probabilities = {key: areas[key] / total_area for key in areas}
 
@@ -372,11 +363,13 @@ def predict_pastro(
         The astrophysical source probabilities for each class.
     """
     # predict redshift according to model coefficients
-    z, z_std = predict_redshift(coefficients, snr, eff_distance, lal_cosmology,
-                                truncate_lower_dist)
+    z, z_std = predict_redshift(
+        coefficients, snr, eff_distance, lal_cosmology, truncate_lower_dist
+    )
 
     # calculate class probabilities given mchirp and redshift uncertainty
-    probabilities = calc_probabilities(coefficients, mchirp, z, z_std,
-                                       m_bounds, mgap_bounds, group_mgap)
+    probabilities = calc_probabilities(
+        coefficients, mchirp, z, z_std, m_bounds, mgap_bounds, group_mgap
+    )
 
     return probabilities

@@ -1,12 +1,14 @@
-pycbc  # TODO: remove pycbc dependency
 astropy
+black
+flake8
+isort
 ligo-gracedb
 ligo-proxy-utils
+matplotlib
+mypy
 
 numpy
-scipy
 pandas
-matplotlib
 
 # ipykernel
 # jupyter
@@ -14,8 +16,6 @@ matplotlib
 
 # dev packages
 pre-commit
-black
-isort
-mypy
-flake8
+pycbc  # TODO: remove pycbc dependency
+scipy
 yapf

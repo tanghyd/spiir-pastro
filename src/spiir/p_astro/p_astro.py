@@ -1,8 +1,8 @@
 import numpy as np
 
-# from ligo.p_astro_computation import p_astro_update
-
 from .mass_contour import predict_pastro
+
+# from ligo.p_astro_computation import p_astro_update
 
 
 def compute_pastro(

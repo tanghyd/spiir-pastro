@@ -13,9 +13,10 @@ repos:
       - id: trailing-whitespace # trims trailing whitespace.
 
   - repo: https://github.com/psf/black
-    rev: 21.12b0
+    rev: 22.3.0
     hooks:
       - id: black
+        exclude: ^scripts/call_from_py2.py
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1

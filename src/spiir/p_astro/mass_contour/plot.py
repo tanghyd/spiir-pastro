@@ -95,8 +95,9 @@ def _draw_mass_contour_axes(
         ax.plot((m1_max, m1_max), (mcm1_to_m2(mcs, lim_m1s), m1_max), "b")
     else:
         ax.plot(m1b, m2b, "b")
-        ax.plot((m1_max, m1_max),
-                (mcm1_to_m2(mcs, lim_m1s), mcm1_to_m2(mcb, lim_m1b)), "b")
+        ax.plot(
+            (m1_max, m1_max), (mcm1_to_m2(mcs, lim_m1s), mcm1_to_m2(mcb, lim_m1b)), "b"
+        )
     if mis >= m2_min:
         ax.plot(m1s, m2s, "b")
         ax.plot((lim_m1s, lim_m1b), (m2_min, m2_min), "b")
@@ -118,10 +119,9 @@ def _draw_mass_contour_axes(
         color=get_source_colour("NSBH"),
         alpha=0.5,
     )
-    ax.fill_between(np.arange(gap_max, m1_max, 0.01),
-                    0.0,
-                    ns_max,
-                    color=get_source_colour("NSBH"))
+    ax.fill_between(
+        np.arange(gap_max, m1_max, 0.01), 0.0, ns_max, color=get_source_colour("NSBH")
+    )
     ax.fill_between(
         np.arange(ns_max, gap_max, 0.01),
         np.arange(ns_max, gap_max, 0.01),
@@ -206,8 +206,8 @@ def _draw_mass_contour_axes(
 
 
 def plot_prob_pie_figure(
-        probabilities: dict[str, float],
-        figsize: tuple[float, float] = (8, 6),
+    probabilities: dict[str, float],
+    figsize: tuple[float, float] = (8, 6),
 ) -> Figure:
     fig, ax = plt.subplots(figsize=figsize)
     _draw_prob_pie_axes(ax, probabilities)

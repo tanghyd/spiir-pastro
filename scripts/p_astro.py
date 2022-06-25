@@ -27,9 +27,7 @@ logger = logging.getLogger()
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Run the SPIIR p(astro) computation."
-    )
+    parser = argparse.ArgumentParser(description="Run the SPIIR p(astro) computation.")
     parser.add_argument(
         "--outdir",
         type=str,
