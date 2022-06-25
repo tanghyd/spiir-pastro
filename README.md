@@ -118,8 +118,9 @@ following commands:
     pre-commit run --all-files  # by default pre-commit only runs on git staged files
 
 When a `git commit` command is called after staging files, `pre-commit` will be run
-before the commit is finalised. If any changes ARE made to your files according to the
-rules configured in `.pre-commit-config.yaml`, files will need to be re-staged as they
+before the commit is finalised. If the pre-commit checks fail, the commit will be
+aborted. Additionally, if any changes ARE made to your files according to the rules
+configured in `.pre-commit-config.yaml`, files will need to be re-staged as they
 would have been modified since the initial file staging procedure (`git add`).
 
 See the documentation at [pre-commit](https://pre-commit.com/) for more information.
