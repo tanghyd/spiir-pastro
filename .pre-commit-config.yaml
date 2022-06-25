@@ -16,7 +16,7 @@ repos:
     rev: 22.3.0
     hooks:
       - id: black
-        exclude: ^scripts/call_from_py2.py
+        # exclude: ^scripts/call_from_py2.py
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1

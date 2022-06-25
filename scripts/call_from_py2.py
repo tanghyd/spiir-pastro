@@ -11,14 +11,15 @@ from contextlib import contextmanager
 
 # from spiir.config.logs import logger
 
+
 @contextmanager
 def run_and_terminate_process(*args, **kwargs):
     try:
         p = subprocess.Popen(*args, **kwargs)
         yield p
     finally:
-        p.terminate() # send sigterm, or ...
-        p.kill()      # send sigkill
+        p.terminate()  # send sigterm, or ...
+        p.kill()  # send sigkill
 
 
 if __name__ == "__main__":
@@ -26,7 +27,8 @@ if __name__ == "__main__":
         description="Run the SPIIR p(astro) computation via subprocess pipe."
     )
     parser.add_argument(
-        "-e", "--entry-point",
+        "-e",
+        "--entry-point",
         type=str,
         default="scripts/local_entrypoint.sh",
         help="Entrypoint bash script for subprocess.",
@@ -65,7 +67,7 @@ if __name__ == "__main__":
     )
 
     for i in range(3):
-        time.sleep(i*0.2)
+        time.sleep(i * 0.2)
 
         msg = "py2: hello #%d" % i
         print(msg)
@@ -98,6 +100,6 @@ if __name__ == "__main__":
     duration = round(end - start, 6)
     print("py2 duration: %.6f" % duration)
 
-    print "Success!"
+    print("Success!")
 
     # note: if you don't see "Success!" something bad happened
